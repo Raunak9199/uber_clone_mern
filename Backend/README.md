@@ -1,4 +1,4 @@
-# API Documentation: `/users/register` and `/users/login`
+# API Documentation: `/users/register`, `/users/login`, and `/users/logout`
 
 ## Endpoint: `/users/register`
 
@@ -203,3 +203,63 @@ The endpoint expects a JSON object in the request body with the following struct
 - Passwords are stored in a hashed format and validated during login.
 - If the email or password is incorrect, a `401 Unauthorized` error is returned.
 - A JWT token is returned upon successful login for use in subsequent requests.
+
+---
+
+## Endpoint: `/users/logout`
+
+### Description:
+
+This endpoint is used to log out a user by invalidating their token. The token is blacklisted to ensure it cannot be used for future authentication.
+
+---
+
+### HTTP Method:
+
+`GET`
+
+---
+
+### Headers:
+
+| Header        | Type   | Required | Description                                            |
+| ------------- | ------ | -------- | ------------------------------------------------------ |
+| Authorization | String | Yes      | The user's JWT token (in the format `Bearer <token>`). |
+| Cookie        | String | Optional | The user's JWT token stored in cookies (if present).   |
+
+---
+
+### Responses:
+
+#### Success:
+
+| Status Code | Description                  | Example Response |
+| ----------- | ---------------------------- | ---------------- |
+| `200`       | User logged out successfully | ```json          |
+
+{
+"status": 200,
+"data": {},
+"message": "User logged out"
+}
+
+````
+
+#### Error:
+| Status Code | Description            | Example Response                                                                                  |
+|-------------|------------------------|--------------------------------------------------------------------------------------------------|
+| `500`       | Internal server error  | ```json
+{
+  "message": "An unexpected error occurred"
+}
+````
+
+---
+
+### Notes:
+
+- The user's token is added to a blacklist in the database to prevent further use.
+- The token is set to expire after 24 hours in the blacklist (`expires: 86400`).
+- Any cookie containing the token will be cleared upon logout.
+
+---
