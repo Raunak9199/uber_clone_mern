@@ -21,3 +21,15 @@ module.exports.createUser = async ({
 
   return user;
 };
+module.exports.loginUser = async ({ email, password }) => {
+  if (!email || !password) {
+    throw new Error("Please provide all the required fields");
+  }
+
+  const user = userModel.create({
+    email,
+    password,
+  });
+
+  return user;
+};
